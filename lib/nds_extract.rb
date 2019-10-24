@@ -62,25 +62,30 @@ end
 
 
 def gross_per_studio(collection)
-  # GOAL: Given an Array of Hashes where each Hash represents a movie,
-  # return a Hash that includes the total worldwide_gross of all the movies from
-  # each studio.
+  # GOAL: Transform NDS'
   #
   # INPUT:
   # * collection: Array of Hashes where each Hash where each Hash represents a movie
   #
   # RETURN:
   #
-  # Hash whose keys are the studio names and whose values are the sum
-  # total of all the worldwide_gross numbers for every movie in the input Hash
-  
-  total = 0
-  index = 0
-  while index < collection.length do
-    total += worldwide_gross[index]
-    index += 1
+  # * Hash whose keys are the studio names and whose values are the sum
+  #   total of all the worldwide_gross numbers for every movie in the input Hash
+  result = {}
+  i = 0
+
+  while i < collection.length do
+    movie = collection[i]
+
+    if !result[movie[:studio]]
+      result[movie[:studio]] = movie[:worldwide_gross]
+    else
+      result[movie[:studio]] += movie[:worldwide_gross]
+    end
+    i += 1
   end
-  total
+
+  result
 end
 
 def movies_with_directors_set(source)
@@ -93,15 +98,19 @@ def movies_with_directors_set(source)
   # RETURN:
   #
   # Array of Arrays containing all of a director's movies. Each movie will need
-  # to have a :director_name key added to it.
-end
+  # to have a :director_name key added to it. You should use the provided
+  # do that work in the movies_with_director_key method
 
-# ----------------    End of Your Code Region --------------------
-# Don't edit the following code! Make the methods above work with this method
-# call code. You'll have to "see-saw" to get this to work!
+  i = 0
+  a_o_a_movies_by_dir = []
 
-def studios_totals(nds)
-  a_o_a_movies_with_director_names = movies_with_directors_set(nds)
-  movies_with_director_names = flatten_a_o_a(a_o_a_movies_with_director_names)
-  return gross_per_studio(movies_with_director_names)
+  while i < source.length do
+    dir_info_hash = source[i]
+    director_name = dir_info_hash[:name]
+    directors_movies = dir_info_hash[:movies]
+    a_o_a_movies_by_dir << movies_with_director_key(director_name, directors_movies)
+    i += 1
+  end
+
+  a_o_a_movies_by_dir
 end
